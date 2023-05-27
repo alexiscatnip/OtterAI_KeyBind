@@ -95,9 +95,20 @@ namespace KBOtterAI
 
                     Thread.Sleep(200);
                 }
+                catch (UnhandledAlertException e)
+                {
+                    // handle the alert popup "do you want to save changes before navigating away."
+                    Thread.Sleep(200);
+                }                
+                catch (NoSuchWindowException e)
+                {
+                    //happy-case to terminate.
+                    Program._quit = true;
+                }          
                 catch (Exception e)
                 {
                     Program._quit = true;
+                    // dont know. catch all.
                 }
             }
             Application.Exit(); // Terminate the entire program

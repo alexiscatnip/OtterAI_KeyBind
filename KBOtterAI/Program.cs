@@ -8,7 +8,7 @@ namespace KBOtterAI
     internal class Program
     {
         //sankkyuu https://github.com/gmamaladze/globalmousekeyhook/issues/3
-        public static bool g_loginStatus => OtterWebInstance.getLoginStatus();
+        // public static bool g_loginStatus => OtterWebInstance.getLoginStatus();
 
         public static bool _quit;
 
