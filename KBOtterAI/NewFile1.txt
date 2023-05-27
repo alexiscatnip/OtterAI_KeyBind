@@ -1,0 +1,33 @@
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using System;
+using System.Linq;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Set up Selenium ChromeDriver
+        var chromeOptions = new ChromeOptions();
+        chromeOptions.AddArgument("--start-maximized"); // Maximize the browser window
+        IWebDriver driver = new ChromeDriver(chromeOptions);
+
+        // Navigate to the Otter.ai website
+        driver.Navigate().GoToUrl("https://otter.ai");
+
+        // Wait for the user to press the assigned keyboard shortcut
+        Console.WriteLine("Press the assigned keyboard shortcut to start the recording...");
+        Console.ReadKey();
+
+        // Find the tab with the Otter.ai website already opened
+        var otterTab = driver.WindowHandles.Last();
+        driver.SwitchTo().Window(otterTab);
+
+        // Locate the "Record" button and click it
+        IWebElement recordButton = driver.FindElement(By.XPath("//button[contains(text(), 'Record')]"));
+        recordButton.Click();
+
+        // Clean up and quit the browser
+        driver.Quit();
+    }
+}
