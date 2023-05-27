@@ -1,69 +1,45 @@
 ﻿using System;
+using System.Windows.Forms;
 using System.Windows.Input;
-using GlobalHotKey;
+using Gma.System.MouseKeyHook;
 
 namespace KBOtterAI
 {
     internal class InputManager : IDisposable
     {
-        public static HotKeyManager g_hotKeyManager;
-        public static HotKey hotKey;
+        public static IKeyboardMouseEvents g_hotKeyManager;
 
         public InputManager()
         {
-            hotKey = SetUpWindowsInput();
+             SetUpWindowsInput();
         }
         
-        
-
-        public static HotKey SetUpWindowsInput()
+        public static void SetUpWindowsInput()
         {
-            
-            // Create the hotkey manager.
-            g_hotKeyManager = new HotKeyManager();
-
-            // Register Ctrl+Alt+F5 hotkey. Save this variable somewhere for the further unregistering.
-            hotKey = g_hotKeyManager.Register(Key.F5, ModifierKeys.Control | ModifierKeys.Alt);
-            
-            // Handle hotkey presses.
-            g_hotKeyManager.KeyPressed += HotKeyManagerPressed;
-
-            return hotKey;
-        }
-
-        private static void HotKeyManagerPressed(object sender, KeyPressedEventArgs e)
-        {
-            
-            
-            if (Program.g_loginStatus == false)
-            {
-                //error: not logged in.
-                Console.WriteLine("Not logged in.");
-            }
-
-            if (e.HotKey.Key == Key.F5)
-            {
-                OtterWebInstance.Focus();
-                OtterWebInstance.StartRecord_Otter();
-            }
+            g_hotKeyManager = Hook.GlobalEvents();
+            g_hotKeyManager.KeyDown += InputManager._hook_KeyDown;
         }
 
         public static void TearDownWindowsInput()
         {
-            
-            // Unregister Ctrl+Alt+F5 hotkey.
-            g_hotKeyManager.Unregister(hotKey);
-
             // Dispose the hotkey manager.
             g_hotKeyManager.Dispose();
-
         }
 
         public void Dispose()
         {
             TearDownWindowsInput();
-            hotKey = null;
             g_hotKeyManager = null;
+        }
+
+        public static void _hook_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.Control && e.Shift && e.Alt && e.KeyCode == Keys.F5)
+            {
+                OtterWebInstance.Focus();
+                OtterWebInstance.StartRecord_Otter();
+            }
+
         }
     }
 }

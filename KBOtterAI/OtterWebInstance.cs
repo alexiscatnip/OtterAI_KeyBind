@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Windows.Forms;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
@@ -83,16 +84,23 @@ namespace KBOtterAI
 
         public static void loopUntilDriverClose()
         {
-            try
+            while (Program._quit == false)
             {
-                if (g_driver.Title == "")
-                    return;
-                Thread.Sleep(200);
+                try
+                {
+                    if (g_driver.Title == "")
+                    {
+                        Program._quit = true;
+                    }
+
+                    Thread.Sleep(200);
+                }
+                catch (Exception e)
+                {
+                    Program._quit = true;
+                }
             }
-            catch (Exception e)
-            {
-                return;
-            }
+            Application.Exit(); // Terminate the entire program
         }
         
         
